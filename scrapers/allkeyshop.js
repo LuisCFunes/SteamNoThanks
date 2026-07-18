@@ -40,20 +40,30 @@ function generateSlugs(title) {
 
 async function tryUrl(page, url) {
   try {
-    const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
+    console.log(`  Trying URL: ${url}`);
+    const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 25000 });
+    console.log(`  Status: ${resp.status()}`);
     if (resp.status() === 404) return null;
-    await page.waitForTimeout(4000);
+    await page.waitForTimeout(5000);
 
     const result = await page.evaluate(() => {
-      if (typeof jQuery === 'undefined' || !jQuery.fn.DataTable) return null;
+      if (typeof jQuery === 'undefined' || !jQuery.fn.DataTable) {
+        console.log('jQuery or DataTable not found');
+        return null;
+      }
       const dt = jQuery('#offerTable').DataTable();
       const data = dt.data().toArray();
       return Array.isArray(data) ? data : null;
     });
 
-    if (result && result.length > 0) return result;
+    if (result && result.length > 0) {
+      console.log(`  Found ${result.length} offers`);
+      return result;
+    }
+    console.log('  No DataTable data found');
     return null;
-  } catch {
+  } catch (e) {
+    console.log(`  tryUrl error: ${e.message}`);
     return null;
   }
 }
@@ -61,10 +71,12 @@ async function tryUrl(page, url) {
 async function scrapeAllKeyShop(gameTitle) {
   let browser;
   try {
+    console.log(`Scraping AllKeyShop for: "${gameTitle}"`);
     browser = await chromium.launch({
       headless: true,
-      args: ['--disable-blink-features=AutomationControlled', '--no-sandbox']
+      args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-setuid-sandbox']
     });
+    console.log('Browser launched successfully');
     const context = await browser.newContext({
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
       locale: 'en-US',
@@ -72,6 +84,7 @@ async function scrapeAllKeyShop(gameTitle) {
     const page = await context.newPage();
 
     const slugs = generateSlugs(gameTitle);
+    console.log(`Trying ${slugs.length} slug(s): ${slugs.join(', ')}`);
     let allOffers = null;
 
     for (const slug of slugs) {

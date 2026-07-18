@@ -64,7 +64,7 @@ router.get('/scrape-allkeyshop', async (req, res) => {
     res.json(offers);
   } catch (error) {
     console.error('AllKeyShop scrape error:', error.message);
-    res.status(500).json({ error: 'Error scraping AllKeyShop', details: error.message });
+    res.status(500).json({ error: 'Error scraping AllKeyShop', details: error.message, stack: error.stack?.split('\n').slice(0,5).join('\n') });
   }
 });
 

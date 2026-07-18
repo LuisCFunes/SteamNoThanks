@@ -28,6 +28,29 @@ app.get('/api/exchange-rate', (req, res) => {
   res.json({ EUR_TO_USD: eurToUsd });
 });
 
+app.get('/api/diagnostics', async (req, res) => {
+  const result = { playwrite: false, chromium: false, error: null };
+  try {
+    const { chromium } = require('playwright');
+    result.playwrite = true;
+    const browser = await chromium.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    result.chromium = true;
+    const page = await browser.newPage();
+    await page.goto('https://httpbin.org/get', { timeout: 15000 });
+    result.pageLoad = true;
+    const title = await page.title();
+    result.title = title;
+    await browser.close();
+  } catch (e) {
+    result.error = e.message;
+    result.stack = e.stack?.split('\n').slice(0, 5).join('\n');
+  }
+  res.json(result);
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api', apiRoutes);
 
