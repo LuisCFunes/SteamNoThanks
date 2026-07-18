@@ -29,19 +29,31 @@ app.get('/api/exchange-rate', (req, res) => {
 });
 
 app.get('/api/diagnostics', async (req, res) => {
-  const result = { playwrite: false, chromium: false, systemChromium: null, error: null };
+  const result = { playwrite: false, chromium: false, systemChromium: null, pathsChecked: [], error: null };
   try {
     const { chromium } = require('playwright');
     const { execSync } = require('child_process');
+    const { accessSync, constants } = require('fs');
     result.playwrite = true;
+    const paths = ['/usr/bin/chromium', '/usr/bin/chromium-browser', '/snap/bin/chromium'];
+    for (const p of paths) {
+      try {
+        accessSync(p, constants.X_OK);
+        result.systemChromium = p;
+        result.pathsChecked.push({ path: p, found: true });
+      } catch {
+        result.pathsChecked.push({ path: p, found: false });
+      }
+    }
     try {
-      result.systemChromium = execSync('which chromium || which chromium-browser || echo "not found"', { encoding: 'utf8' }).trim();
+      const which = execSync('which chromium 2>/dev/null || echo ""', { encoding: 'utf8' }).trim();
+      if (which && !result.systemChromium) result.systemChromium = which;
     } catch {}
     const config = {
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     };
-    if (result.systemChromium && result.systemChromium !== 'not found') {
+    if (result.systemChromium) {
       config.executablePath = result.systemChromium;
     }
     const browser = await chromium.launch(config);

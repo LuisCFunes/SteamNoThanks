@@ -1,14 +1,27 @@
 const { chromium } = require('playwright');
+const { accessSync, constants } = require('fs');
 const { execSync } = require('child_process');
 
 const ALLOWED_STORES = ['G2A', 'Kinguin', 'Eneba', 'GAMIVO', 'K4G'];
 
 function findSystemChromium() {
+  const paths = [
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/snap/bin/chromium',
+  ];
+  for (const p of paths) {
+    try {
+      accessSync(p, constants.X_OK);
+      console.log(`Found system Chromium at: ${p}`);
+      return p;
+    } catch {}
+  }
   try {
-    const path = execSync('which chromium || which chromium-browser || echo ""', { encoding: 'utf8' }).trim();
-    if (path) {
-      console.log(`Found system Chromium at: ${path}`);
-      return path;
+    const which = execSync('which chromium 2>/dev/null || which chromium-browser 2>/dev/null || echo ""', { encoding: 'utf8' }).trim();
+    if (which) {
+      console.log(`Found system Chromium via which: ${which}`);
+      return which;
     }
   } catch {}
   return null;
@@ -18,13 +31,13 @@ function launchConfig() {
   const systemPath = findSystemChromium();
   const config = {
     headless: true,
-    args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-setuid-sandbox']
+    args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
   };
   if (systemPath) {
     config.executablePath = systemPath;
     console.log('Using system Chromium');
   } else {
-    console.log('Using Playwright bundled Chromium');
+    console.log('Using Playwright bundled Chromium (if available)');
   }
   return config;
 }

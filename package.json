@@ -4,8 +4,7 @@
   "description": "Comparador de precios de videojuegos usando IsThereAnyDeal API",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "postinstall": "npx playwright install chromium"
+    "start": "node server.js"
   },
   "dependencies": {
     "axios": "^1.6.0",
