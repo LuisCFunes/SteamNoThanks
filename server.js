@@ -29,14 +29,22 @@ app.get('/api/exchange-rate', (req, res) => {
 });
 
 app.get('/api/diagnostics', async (req, res) => {
-  const result = { playwrite: false, chromium: false, error: null };
+  const result = { playwrite: false, chromium: false, systemChromium: null, error: null };
   try {
     const { chromium } = require('playwright');
+    const { execSync } = require('child_process');
     result.playwrite = true;
-    const browser = await chromium.launch({
+    try {
+      result.systemChromium = execSync('which chromium || which chromium-browser || echo "not found"', { encoding: 'utf8' }).trim();
+    } catch {}
+    const config = {
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+    };
+    if (result.systemChromium && result.systemChromium !== 'not found') {
+      config.executablePath = result.systemChromium;
+    }
+    const browser = await chromium.launch(config);
     result.chromium = true;
     const page = await browser.newPage();
     await page.goto('https://httpbin.org/get', { timeout: 15000 });

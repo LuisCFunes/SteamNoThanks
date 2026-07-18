@@ -1,6 +1,33 @@
 const { chromium } = require('playwright');
+const { execSync } = require('child_process');
 
 const ALLOWED_STORES = ['G2A', 'Kinguin', 'Eneba', 'GAMIVO', 'K4G'];
+
+function findSystemChromium() {
+  try {
+    const path = execSync('which chromium || which chromium-browser || echo ""', { encoding: 'utf8' }).trim();
+    if (path) {
+      console.log(`Found system Chromium at: ${path}`);
+      return path;
+    }
+  } catch {}
+  return null;
+}
+
+function launchConfig() {
+  const systemPath = findSystemChromium();
+  const config = {
+    headless: true,
+    args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-setuid-sandbox']
+  };
+  if (systemPath) {
+    config.executablePath = systemPath;
+    console.log('Using system Chromium');
+  } else {
+    console.log('Using Playwright bundled Chromium');
+  }
+  return config;
+}
 
 function titleToSlug(title) {
   return title
@@ -72,10 +99,7 @@ async function scrapeAllKeyShop(gameTitle) {
   let browser;
   try {
     console.log(`Scraping AllKeyShop for: "${gameTitle}"`);
-    browser = await chromium.launch({
-      headless: true,
-      args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-setuid-sandbox']
-    });
+    browser = await chromium.launch(launchConfig());
     console.log('Browser launched successfully');
     const context = await browser.newContext({
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
