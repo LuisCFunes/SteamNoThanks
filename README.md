@@ -1,4 +1,4 @@
-# SteamEscape
+# SteamNoThanks
 
 Compare Steam game prices across authorized stores and grey market key shops in one place.
 
@@ -32,8 +32,8 @@ Search for any game, click a result, and see a side-by-side comparison of prices
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/SteamEscape.git
-cd SteamEscape
+git clone https://github.com/YOUR_USERNAME/SteamNoThanks.git
+cd SteamNoThanks
 
 # Install dependencies
 npm install
@@ -68,7 +68,7 @@ Open `http://localhost:3000` in your browser.
 ## Project Structure
 
 ```
-game-price-compare/
+SteamNoThanks/
 ├── public/
 │   ├── css/
 │   │   └── styles.css

@@ -1,5 +1,5 @@
 {
-  "name": "game-price-compare",
+  "name": "SteamNoThanks",
   "version": "1.0.0",
   "description": "Comparador de precios de videojuegos usando IsThereAnyDeal API",
   "main": "server.js",
