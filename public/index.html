@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SteamNoThanks - Comparador de Precios</title>
+  <title>SteamNoThanks - Price Comparator</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
   <header>
     <div class="container">
       <h1>SteamNoThanks</h1>
-      <p class="subtitle">Compara precios de videojuegos en todas las tiendas</p>
+      <p class="subtitle">Compare game prices across all stores</p>
     </div>
   </header>
 
@@ -18,7 +18,7 @@
     <section class="search-section">
       <form id="searchForm">
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Buscar un juego..." autocomplete="off">
+          <input type="text" id="searchInput" placeholder="Search a game..." autocomplete="off">
           <button type="submit">Buscar</button>
         </div>
       </form>
@@ -26,7 +26,7 @@
 
     <section id="loading" class="hidden">
       <div class="spinner"></div>
-      <p id="loadingText">Buscando precios...</p>
+      <p id="loadingText">Fetching prices...</p>
     </section>
 
     <section id="error" class="hidden">
@@ -34,12 +34,12 @@
     </section>
 
     <section id="gameList" class="hidden">
-      <h2 class="game-list-title">Selecciona un juego</h2>
+      <h2 class="game-list-title">Select a game</h2>
       <div id="gameListGrid" class="game-list-grid"></div>
     </section>
 
     <section id="results" class="hidden">
-      <button id="backBtn" class="back-btn">&larr; Volver a resultados</button>
+      <button id="backBtn" class="back-btn">&larr; Back to results</button>
       <div class="game-header">
         <img id="gameImage" src="" alt="" width="150" height="150">
         <div class="game-header-info">
@@ -73,7 +73,7 @@
 
       <div id="greySection" class="grey-market-section hidden">
         <h3 class="section-title">Tiendas de Keys (Mercado Gris)</h3>
-        <p class="section-subtitle">G2A, Kinguin, Eneba, GAMIVO, K4G, HRK y mas - precios en EUR</p>
+        <p class="section-subtitle">G2A, Kinguin, Eneba, GAMIVO, K4G, HRK and more - prices in EUR</p>
         <div id="greyMessage" class="grey-message hidden"></div>
         <div class="price-table">
           <table>
@@ -97,7 +97,7 @@
 
   <footer>
     <div class="container">
-      <p>Precios oficiales de <a href="https://isthereanydeal.com" target="_blank">IsThereAnyDeal</a> y mercado gris de <a href="https://www.allkeyshop.com" target="_blank">AllKeyShop</a></p>
+      <p>Official prices from <a href="https://isthereanydeal.com" target="_blank">IsThereAnyDeal</a> and grey market from <a href="https://www.allkeyshop.com" target="_blank">AllKeyShop</a></p>
     </div>
   </footer>
 

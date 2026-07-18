@@ -11,7 +11,7 @@ Search for any game, click a result, and see a side-by-side comparison of prices
 - **Grey market scraping** — G2A, Kinguin, Eneba, GAMIVO, K4G prices aggregated from AllKeyShop
 - **EUR to USD conversion** — daily exchange rate via Frankfurter API (free, no key required)
 - **Dark gaming theme** — clean, responsive web UI
-- **Steam exclusivity indicator** — shows "Exclusivo Steam" when no other authorized stores carry the game
+- **Steam exclusivity indicator** — shows "Steam Exclusive" when no other authorized stores carry the game
 
 ## Tech Stack
 
@@ -53,7 +53,7 @@ Open `http://localhost:3000` in your browser.
 2. Browse the game results grid and click on a game card
 3. View authorized store prices in the table (sorted by price)
 4. Scroll to the grey market section for key prices from G2A, Kinguin, Eneba, GAMIVO, and K4G
-5. Click "Comprar" to go directly to the store page
+5. Click "Buy" to go directly to the store page
 
 ## API Endpoints
 

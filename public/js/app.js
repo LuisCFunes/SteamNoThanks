@@ -41,7 +41,7 @@ function hideAll() {
 
 function showLoading(text) {
   hideAll();
-  loadingText.textContent = text || 'Buscando...';
+  loadingText.textContent = text || 'Searching...';
   loading.classList.remove('hidden');
 }
 
@@ -57,7 +57,7 @@ searchForm.addEventListener('submit', async (e) => {
   const query = searchInput.value.trim();
   if (!query) return;
 
-  showLoading('Buscando juegos...');
+  showLoading('Searching games...');
 
   try {
     const searchRes = await fetch(`/api/search?title=${encodeURIComponent(query)}`);
@@ -65,7 +65,7 @@ searchForm.addEventListener('submit', async (e) => {
     const games = Array.isArray(searchData) ? searchData : (searchData.data || searchData.value || []);
 
     if (!games || games.length === 0) {
-      showError('No se encontraron resultados para "' + query + '"');
+      showError('No results found for "' + query + '"');
       return;
     }
 
@@ -74,7 +74,7 @@ searchForm.addEventListener('submit', async (e) => {
     hideAll();
     renderGameList(games);
   } catch (e) {
-    showError('Error al buscar el juego. Intenta de nuevo.');
+    showError('Error searching for game. Try again.');
     console.error(e);
   }
 });
@@ -103,7 +103,7 @@ function renderGameList(games) {
 
 // --- Select a game: fetch prices ---
 async function selectGame(game) {
-  showLoading('Buscando precios...');
+  showLoading('Fetching prices...');
 
   try {
 
@@ -123,7 +123,7 @@ async function selectGame(game) {
     renderGame(game, infoData, priceInfo, aksData, aksError);
     results.classList.remove('hidden');
   } catch (e) {
-    showError('Error al buscar precios. Intenta de nuevo.');
+    showError('Error fetching prices. Try again.');
     console.error(e);
   }
 }
@@ -156,7 +156,7 @@ function renderGame(game, info, priceInfo, aksOffers, aksError) {
   steamPrice.classList.add('hidden');
 
   if (!priceInfo || !priceInfo.deals || priceInfo.deals.length === 0) {
-    priceTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;">No hay precios disponibles para este juego</td></tr>';
+    priceTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;">No prices available for this game</td></tr>';
     return;
   }
 
@@ -210,14 +210,14 @@ function renderGame(game, info, priceInfo, aksOffers, aksError) {
       <td class="price">${formatPrice(price, deal.price.currency)}</td>
       <td class="diff">${diffHtml}</td>
       <td class="discount">${cut > 0 ? `-${cut}%` : '-'}</td>
-      <td><a href="${deal.url || '#'}" target="_blank">Comprar</a></td>
+      <td><a href="${deal.url || '#'}" target="_blank">Buy</a></td>
     `;
     priceTableBody.appendChild(tr);
   });
 
   if (sortedDeals.length === 0 && steamDeal) {
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td colspan="5" style="text-align:center;color:#888;">Exclusivo Steam</td>';
+    tr.innerHTML = '<td colspan="5" style="text-align:center;color:#888;">Steam Exclusive</td>';
     priceTableBody.appendChild(tr);
   }
 
@@ -225,11 +225,11 @@ function renderGame(game, info, priceInfo, aksOffers, aksError) {
   greyTableBody.innerHTML = '';
 
   if (aksError) {
-    greyMessage.textContent = 'Error al consultar tiendas de mercado gris. Intenta de nuevo.';
+    greyMessage.textContent = 'Error querying grey market stores. Try again.';
     greyMessage.className = 'grey-message error';
     greySection.classList.remove('hidden');
   } else if (!aksOffers || aksOffers.length === 0) {
-    greyMessage.textContent = 'No se encontraron ofertas en mercado gris para este juego.';
+    greyMessage.textContent = 'No grey market offers found for this game.';
     greyMessage.className = 'grey-message info';
     greySection.classList.remove('hidden');
   } else {
@@ -239,7 +239,7 @@ function renderGame(game, info, priceInfo, aksOffers, aksError) {
       .sort((a, b) => a.priceEUR - b.priceEUR);
 
     if (sortedAKS.length === 0) {
-      greyMessage.textContent = 'No se encontraron keys de Steam en mercado gris.';
+      greyMessage.textContent = 'No Steam keys found on grey market.';
       greyMessage.className = 'grey-message info';
       greySection.classList.remove('hidden');
     } else {
@@ -263,7 +263,7 @@ function renderGame(game, info, priceInfo, aksOffers, aksError) {
           <td>${offer.shop} <span class="grey-badge">KEY</span></td>
           <td class="price">\u20AC${offer.priceEUR.toFixed(2)} <span class="price-usd">($${priceUSD.toFixed(2)})</span></td>
           <td class="diff">${diffHtml}</td>
-          <td><a href="${offer.url}" target="_blank">Comprar</a></td>
+          <td><a href="${offer.url}" target="_blank">Buy</a></td>
         `;
         greyTableBody.appendChild(tr);
       });

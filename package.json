@@ -1,7 +1,7 @@
 {
   "name": "SteamNoThanks",
   "version": "1.0.0",
-  "description": "Comparador de precios de videojuegos usando IsThereAnyDeal API",
+  "description": "Compare game prices across official and grey market stores",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
